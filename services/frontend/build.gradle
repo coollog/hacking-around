@@ -1,12 +1,16 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 group 'hack.chat'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+mainClassName = 'hack.chat.frontend.FrontendService'
+def imageName = 'hack-chat-frontend:frontend'
 
 repositories {
     jcenter()
@@ -19,8 +23,11 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
-task run(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
+task dockerBuild(type: Exec) {
+    commandLine 'docker', 'build', '-t', "${imageName}", '.'
+    dependsOn shadowJar
+}
 
-    main = 'hack.chat.frontend.FrontendService'
+task kubectlApply(type: Exec) {
+    commandLine 'kubectl', 'apply', '-f', 'src/main/k8s/'
 }
