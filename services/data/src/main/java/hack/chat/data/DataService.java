@@ -28,6 +28,12 @@ public class DataService {
 
   private static final Gson gson = new Gson();
 
+  private static class AddRequestTemplate {
+
+    private String name;
+    private String msg;
+  }
+
   public static void main(String[] args) {
     DataService dataService = new DataService();
 
@@ -38,12 +44,9 @@ public class DataService {
     }, gson::toJson);
 
     post("/add", (request, response) -> {
-      class RequestTemplate {
+      System.out.println("Got request body : " + request.body());
 
-        private String name;
-        private String msg;
-      }
-      RequestTemplate requestTemplate = gson.fromJson(request.body(), RequestTemplate.class);
+      AddRequestTemplate requestTemplate = gson.fromJson(request.body(), AddRequestTemplate.class);
       if (requestTemplate == null) {
         return ImmutableMap.of("error", "invalid request : " + request.body());
       }
