@@ -1,12 +1,15 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 group 'hack.chat'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+mainClassName = 'hack.chat.data.DataService'
 
 repositories {
     jcenter()
@@ -17,10 +20,4 @@ dependencies {
     compile "com.sparkjava:spark-core:2.7.2"
     compile 'com.google.code.gson:gson:2.8.2'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
-}
-
-task run(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-
-    main = 'hack.chat.data.DataService'
 }
