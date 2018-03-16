@@ -1,0 +1,33 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: data-service
+spec:
+  selector:
+    app: data-service
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4567
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: data-service
+  labels:
+    app: data-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-service
+  template:
+    metadata:
+      labels:
+        app: data-service
+    spec:
+      containers:
+      - name: data-service
+        image: hack-chat-data
+        ports:
+        - containerPort: 4567
