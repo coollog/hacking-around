@@ -10,7 +10,7 @@ group 'hack.chat'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 mainClassName = 'hack.chat.data.DataService'
-def imageName = 'hack-chat-data'
+def imageName = 'hack-chat-data:data'
 
 repositories {
     jcenter()
