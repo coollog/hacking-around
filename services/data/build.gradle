@@ -10,7 +10,7 @@ group 'hack.chat'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 mainClassName = 'hack.chat.data.DataService'
-imageName = 'hack-chat-app'
+def imageName = 'hack-chat-data'
 
 repositories {
     jcenter()
@@ -24,11 +24,10 @@ dependencies {
 }
 
 task dockerBuild(type: Exec) {
-    commandLine ('docker build -t ' + imageName + ' .')
+    commandLine 'docker', 'build', '-t', "${imageName}", '.'
     dependsOn shadowJar
 }
 
 task kubectlApply(type: Exec) {
-    commandLine 'kubectl apply -f src/main/k8s/'
-    dependsOn dockerBuild
+    commandLine 'kubectl', 'apply', '-f', 'src/main/k8s/'
 }
