@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: data-service
-        image: hack-chat-data
+        image: hack-chat-data:data
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 4567
