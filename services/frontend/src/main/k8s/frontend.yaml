@@ -1,0 +1,40 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-service
+spec:
+  type: NodePort
+  selector:
+    app: frontend-service
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 4567
+  - name: debug
+    protocol: TCP
+    port: 5005
+    targetPort: 5005
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: frontend-service
+  labels:
+    app: frontend-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-service
+  template:
+    metadata:
+      labels:
+        app: frontend-service
+    spec:
+      containers:
+      - name: frontend-service
+        image: gcr.io/qingyangc-sandbox/hacking-around:frontend
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4567

@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:jib-gradle-plugin:0.1.0-SNAPSHOT'
+    }
+}
+
 plugins {
     id 'java'
     id 'idea'
@@ -23,6 +32,12 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'hack.chat.frontend.FrontendService'
+    }
+}
+
 task dockerBuild(type: Exec) {
     commandLine 'docker', 'build', '-t', "${imageName}", '.'
     dependsOn shadowJar
@@ -31,3 +46,19 @@ task dockerBuild(type: Exec) {
 task kubectlApply(type: Exec) {
     commandLine 'kubectl', 'apply', '-f', 'src/main/k8s/'
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.6'
+}
+
+apply plugin: 'com.google.cloud.tools.jib'
+
+jib {
+    to {
+        image = 'gcr.io/qingyangc-sandbox/hacking-around:frontend'
+        credHelper = 'gcr'
+    }
+
+    jvmFlags = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005']
+}
+tasks.jib.dependsOn build
